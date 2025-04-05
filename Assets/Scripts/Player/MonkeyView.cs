@@ -37,12 +37,11 @@ namespace ServiceLocator.Player
                 return;
             controller.BloonEnteredRange(bloonView.Controller);
         }
-
-        private void OnTriggerExit2D(Collider2D other)
+        private void OnTriggerExit(Collider other)
         {
-            if (!other.TryGetComponent(out BloonView bloonView))
-                return;
-            controller.BloonEnteredRange(bloonView.Controller);
+                if (!other.TryGetComponent(out BloonView bloonView))
+                    return;
+                controller.BloonExitedRange(bloonView.Controller);
         }
     }
 
