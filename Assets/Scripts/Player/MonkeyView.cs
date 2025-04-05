@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using ServiceLocator.Wave.Bloon;
 
@@ -29,6 +30,20 @@ namespace ServiceLocator.Player
         public void PlayAnimation(MonkeyAnimation animationToPlay) => monkeyAnimator.Play(animationToPlay.ToString(), 0);
 
         public void MakeRangeVisible(bool makeVisible) => RangeSpriteRenderer.color = makeVisible ? new Color(1, 1, 1, 0.25f) : new Color(1, 1, 1, 0);
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (!other.TryGetComponent(out BloonView bloonView))
+                return;
+            controller.BloonEnteredRange(bloonView.Controller);
+        }
+
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            if (!other.TryGetComponent(out BloonView bloonView))
+                return;
+            controller.BloonEnteredRange(bloonView.Controller);
+        }
     }
 
     public enum MonkeyAnimation
