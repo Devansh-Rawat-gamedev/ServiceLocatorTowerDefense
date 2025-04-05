@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Main;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
@@ -54,7 +55,7 @@ namespace ServiceLocator.UI
             SubscribeToEvents();
         }
 
-        public void SubscribeToEvents() => EventService.Instance.OnMapSelected.AddListener(OnMapSelected);
+        public void SubscribeToEvents() => GameService.Instance.EventService.OnMapSelected.AddListener(OnMapSelected);
 
         public void OnMapSelected(int mapID)
         {
@@ -67,7 +68,7 @@ namespace ServiceLocator.UI
 
         private void OnNextWaveButton()
         {
-            WaveService.Instance.StarNextWave();
+            GameService.Instance.WaveService.StarNextWave();
             SetNextWaveButton(false);
         }
 

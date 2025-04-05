@@ -11,23 +11,24 @@ using ServiceLocator.Sound;
 
 namespace ServiceLocator.Wave
 {
-    public class WaveService : GenericMonoSingleton<WaveService>
+    public class WaveService 
     {
-        [SerializeField] private WaveScriptableObject waveScriptableObject;
+        private WaveScriptableObject waveScriptableObject;
         private BloonPool bloonPool;
 
         private int currentWaveId;
         private List<WaveData> waveDatas;
         private List<BloonController> activeBloons;
-
-        private void Start()
+        
+        public WaveService(WaveScriptableObject waveScriptableObject)
         {
+            this.waveScriptableObject = waveScriptableObject;
             bloonPool = new BloonPool(waveScriptableObject);
             activeBloons = new List<BloonController>();
             SubscribeToEvents();
         }
 
-        private void SubscribeToEvents() => EventService.Instance.OnMapSelected.AddListener(LoadWaveDataForMap);
+        private void SubscribeToEvents() => GameService.Instance.EventService.OnMapSelected.AddListener(LoadWaveDataForMap);
 
         private void LoadWaveDataForMap(int mapId)
         {
@@ -40,7 +41,7 @@ namespace ServiceLocator.Wave
         {
             currentWaveId++;
             var bloonsToSpawn = GetBloonsForCurrentWave();
-            var spawnPosition = MapService.Instance.GetBloonSpawnPositionForCurrentMap();
+            var spawnPosition = GameService.Instance.MapService.GetBloonSpawnPositionForCurrentMap();
             SpawnBloons(bloonsToSpawn, spawnPosition, 0, waveScriptableObject.SpawnRate);
         }
 
@@ -50,7 +51,7 @@ namespace ServiceLocator.Wave
             {
                 BloonController bloon = bloonPool.GetBloon(bloonType);
                 bloon.SetPosition(spawnPosition);
-                bloon.SetWayPoints(MapService.Instance.GetWayPointsForCurrentMap(), startingWaypointIndex);
+                bloon.SetWayPoints(GameService.Instance.MapService.GetWayPointsForCurrentMap(), startingWaypointIndex);
 
                 AddBloon(bloon);
                 await Task.Delay(Mathf.RoundToInt(spawnRate * 1000));
